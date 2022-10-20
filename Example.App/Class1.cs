@@ -1,5 +1,6 @@
 ﻿namespace Example.App;
 
-public class Class1
+
+public class App
 {
 }

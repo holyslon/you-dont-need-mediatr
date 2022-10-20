@@ -15,9 +15,6 @@ public class CalculationUnit
     
     public Task<(int Fibonachi, int Factorial)> DoCalulate(int target)
     {
-        using var _ = _metrics.StartWork(nameof(CalculationUnit));
-        _validator.Validate(target);
-        _cache.GetOrAdd() 
         return Task.FromResult((_factorialService.GetFactorial(target), _fibonacciService.GetNumber(target)));
     }
 }
