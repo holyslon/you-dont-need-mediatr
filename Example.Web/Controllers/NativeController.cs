@@ -1,5 +1,5 @@
-﻿using Example.App.MediatR.Calculation;
-using Example.App.Native;
+﻿using Example.App.Native;
+using Example.Web.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Example.Web.Controllers;
@@ -14,19 +14,17 @@ public class NativeController : ControllerBase
     {
         _unit = unit;
     }
-    
-    public record CalculateInput(int? target){}
+
+    public record CalculateInput(int? target);
 
     [HttpPost("calculate")]
-    public async Task<(int,int)> Calculate([FromBody] CalculateInput input)
+    public async Task<(int, int)> Calculate([FromBody] CalculateInput input)
     {
-        if (!input.target.HasValue)
-        {
-            throw new BadHttpRequestException($"{nameof(MediatRController.CalculateInput.target)} should be present", 400);
-        }
-        else
-        {
-            return await _unit.DoCalulate(input.target.Value);
-        }
+        var request = ValidateNullable.GetOrThrow(
+            ctx => new CalculateRequest(
+                Target: ctx.Get(input.target)
+            )
+        );
+        return await _unit.DoCalculate(request);
     }
 }
