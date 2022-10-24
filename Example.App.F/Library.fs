@@ -15,10 +15,6 @@ module Calculator =
   type NotPositiveNumberError = string
   type ToBigNumberError = string
 
-  type NumberValidationError =
-    | NotPositiveNumberError
-    | ToBigNumberError
-
   type Rule<'value, 'error> = 'value -> Result<'value, 'error>
 
   let numGreaterThanZeroRule: Rule<int, NotPositiveNumberError> =
