@@ -1,0 +1,15 @@
+version: '3.4'
+services:
+  k6:
+    build:
+      context: .
+      dockerfile: K6.Dockerfile
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
