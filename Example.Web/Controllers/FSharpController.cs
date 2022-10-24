@@ -25,7 +25,8 @@ public class FSharpController : ControllerBase
     {
         if (!input.target.HasValue)
         {
-            throw new BadHttpRequestException($"{nameof(MediatRController.CalculateInput.target)} should be present",
+            throw new BadHttpRequestException(
+                $"{nameof(MediatRController.CalculateInput.Target)} should be present",
                 400);
         }
         else

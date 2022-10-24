@@ -22,7 +22,7 @@ public class NativeController : ControllerBase
     {
         if (!input.target.HasValue)
         {
-            throw new BadHttpRequestException($"{nameof(MediatRController.CalculateInput.target)} should be present", 400);
+            throw new BadHttpRequestException($"{nameof(MediatRController.CalculateInput.Target)} should be present", 400);
         }
         else
         {
