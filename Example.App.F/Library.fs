@@ -40,4 +40,17 @@ module Calculator =
   let Calculate num =
     Ok(fibonacciSeq |> Seq.take num |> Seq.last, factorialSeq |> Seq.take num |> Seq.last)
 
+  let (>>=) s f = s |> Result.bind f
+  let kleisly f2 f1 = fun v -> f1 v >>= f2
+  let (>=>) f1 f2 = f1 |> kleisly f2
+
+  let validateV2 =
+    numGreaterThanZeroRule >=> numLessThanHundredRule
+
+  let rules =
+    [ numGreaterThanZeroRule
+      numLessThanHundredRule ]
+
+  let validateV3 num = num |> List.reduce (>=>) rules
+
   let Handle num = validate num |> Result.bind Calculate
