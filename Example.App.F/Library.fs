@@ -12,26 +12,23 @@ module Calculator =
 
   let factorialSeq = (0, 1) |> Seq.unfold factorialFormula
 
-  type NotPositiveNumberError = string
-  type ToBigNumberError = string
-
   type NumberValidationError =
-    | NotPositiveNumberError
-    | ToBigNumberError
+    | NotPositiveNumberError of string
+    | ToBigNumberError of string
 
   type Rule<'value, 'error> = 'value -> Result<'value, 'error>
 
-  let numGreaterThanZeroRule: Rule<int, NotPositiveNumberError> =
+  let numGreaterThanZeroRule: Rule<int, NumberValidationError> =
     fun num ->
       if num > 0
       then Ok num
-      else Error $"Number %i{num} must be greater than 0"
+      else Error(NumberValidationError.NotPositiveNumberError $"Number %i{num} must be greater than 0")
 
-  let numLessThanHundredRule: Rule<int, ToBigNumberError> =
+  let numLessThanHundredRule: Rule<int, NumberValidationError> =
     fun num ->
       if num < 100
       then Ok num
-      else Error $"Number %i{num} must be less than 100"
+      else Error(NumberValidationError.ToBigNumberError $"Number %i{num} must be less than 100")
 
   let validate num =
     numGreaterThanZeroRule num
