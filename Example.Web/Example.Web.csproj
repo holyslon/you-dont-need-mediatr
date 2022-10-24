@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Example.App.F\Example.App.F.fsproj" />
       <ProjectReference Include="..\Example.App\Example.App.csproj" />
     </ItemGroup>
 
