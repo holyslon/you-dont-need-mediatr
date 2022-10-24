@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Benchmark;
 
 [MemoryDiagnoser]
+[CsvExporter]
+[CsvMeasurementsExporter]
 public class MediatrVsNative
 {
     private  IServiceProvider? _mediatrServiceProviderTransient;
