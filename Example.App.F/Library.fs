@@ -36,7 +36,7 @@ module Calculator =
   let Calculate num =
     Ok(fibonacciSeq |> Seq.take num |> Seq.last, factorialSeq |> Seq.take num |> Seq.last)
 
-  let (>>=) f2 f1 = f2 |> Result.bind f1
+  let (>>=) f1 f2 = f1 |> Result.bind f2
   let kleisly f2 f1 = fun v -> f1 v >>= f2
   let (>=>) f1 f2 = f1 |> kleisly f2
 
