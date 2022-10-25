@@ -29,7 +29,7 @@ public class NativeController : ControllerBase
         using(_scope.WithScope(input))
         using(_elapsed.WithMeter<MediatRController.CalculateInput>())
         {
-            return await _unit.DoCalulate(target);
+            return await _unit.DoCalculate(target);
         }
     }
 }
