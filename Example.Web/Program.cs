@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using Example.App;
 using Example.App.Logging;
 using Example.App.MediatR.Behaviors.Logging;
+using Example.App.MediatR.Behaviors.Metrics;
 using Example.App.Metrics;
 using Example.App.Native;
 using Example.App.Services.Calculation;
@@ -16,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(MetricsBehavior<,>));
 builder.Services.AddSingleton<FactorialService>();
 builder.Services.AddSingleton<FibonacciService>();
 builder.Services.AddSingleton<CalculationUnit>();
@@ -28,7 +30,6 @@ builder.Services.AddHttpLogging(opts =>
                          HttpLoggingFields.RequestBody | 
                          HttpLoggingFields.ResponseBody);
 
-builder.Services.AddElapsedMetric();
 builder.Services.AddLoggingScopes();
 builder.Services.Configure<ScopeGeneratorOptions<NativeController.CalculateInput>>(opts =>
     opts.WithGenerator(input => ImmutableDictionary.CreateRange(new[]

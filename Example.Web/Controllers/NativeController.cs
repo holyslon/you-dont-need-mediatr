@@ -1,7 +1,7 @@
 using Example.App.Logging;
-using Example.App.MediatR.Calculation;
 using Example.App.Metrics;
 using Example.App.Native;
+using Example.App.Tracing;
 using Example.Web.Validation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,8 +13,6 @@ public class NativeController : ControllerBase
 {
     private readonly CalculationUnit _unit;
     private readonly IScope _scope;
-    private readonly IElapsed _elapsed;
-
     public NativeController(CalculationUnit unit)
     {
         _unit = unit;
@@ -27,7 +25,8 @@ public class NativeController : ControllerBase
     {
         var target = ValidateNullable.GetOrThrow(ctx => ctx.Get(input.target));
         using(_scope.WithScope(input))
-        using(_elapsed.WithMeter<MediatRController.CalculateInput>())
+        using(Elapsed.WithMeter<MediatRController.CalculateInput>())
+        using(Trace.WithTrace<MediatRController.CalculateInput>())
         {
             return await _unit.DoCalculate(target);
         }
