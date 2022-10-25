@@ -1,7 +1,8 @@
-﻿using Example.App.Logging;
+using Example.App.Logging;
 using Example.App.MediatR.Calculation;
 using Example.App.Metrics;
 using Example.App.Native;
+using Example.Web.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Example.Web.Controllers;
@@ -18,21 +19,17 @@ public class NativeController : ControllerBase
     {
         _unit = unit;
     }
-    
-    public record CalculateInput(int? target){}
+
+    public record CalculateInput(int? target);
 
     [HttpPost("calculate")]
-    public async Task<(int,int)> Calculate([FromBody] CalculateInput input)
+    public async Task<(int, int)> Calculate([FromBody] CalculateInput input)
     {
-        if (!input.target.HasValue)
-        {
-            throw new BadHttpRequestException($"{nameof(MediatRController.CalculateInput.target)} should be present", 400);
-        }
-
+        var target = ValidateNullable.GetOrThrow(ctx => ctx.Get(input.target));
         using(_scope.WithScope(input))
         using(_elapsed.WithMeter<MediatRController.CalculateInput>())
         {
-            return await _unit.DoCalulate(input.target.Value);
+            return await _unit.DoCalulate(target);
         }
     }
 }
