@@ -3,13 +3,7 @@ using System.Diagnostics.Metrics;
 using Example.App.MediatR.Behaviors.Metrics;
 
 namespace Example.App.Metrics;
-
-public interface IElapsed
-{
-    IDisposable WithMeter<T>();
-}
-
-internal class Elapsed : IElapsed
+public class Elapsed
 {
     private static readonly Meter Meter = new Meter(nameof(Elapsed));
     private static Histogram<long> _time;
@@ -38,7 +32,7 @@ internal class Elapsed : IElapsed
             _time.Record(_startNew.ElapsedMilliseconds, _requestTag);
         }
     }
-    public IDisposable WithMeter<T>()
+    public static IDisposable WithMeter<T>()
     {
         KeyValuePair<string, object?> requestTag = new("request", nameof(T));
 
