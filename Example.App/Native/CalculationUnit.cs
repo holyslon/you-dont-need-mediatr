@@ -12,7 +12,7 @@ public class CalculationUnit
         _factorialService = factorialService;
         _fibonacciService = fibonacciService;
     }
-    
+
     public Task<(int Fibonachi, int Factorial)> DoCalulate(int target)
     {
         return Task.FromResult((_factorialService.GetFactorial(target), _fibonacciService.GetNumber(target)));

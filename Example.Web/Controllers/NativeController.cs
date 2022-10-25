@@ -1,6 +1,6 @@
 ﻿using Example.App.Logging;
-using Example.App.MediatR.Calculation;
 using Example.App.Native;
+using Example.App.Transactions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Example.Web.Controllers;
@@ -16,20 +16,28 @@ public class NativeController : ControllerBase
     {
         _unit = unit;
     }
-    
-    public record CalculateInput(int? target){}
+
+    public record CalculateInput(int? target)
+    {
+    }
 
     [HttpPost("calculate")]
-    public async Task<(int,int)> Calculate([FromBody] CalculateInput input)
+    public async Task<(int, int)> Calculate([FromBody] CalculateInput input, CancellationToken ct)
     {
         if (!input.target.HasValue)
         {
-            throw new BadHttpRequestException($"{nameof(MediatRController.CalculateInput.target)} should be present", 400);
+            throw new BadHttpRequestException($"{nameof(MediatRController.CalculateInput.target)} should be present",
+                400);
         }
-        else
-        {
-            using var _ = _scope.WithScope(input);
-            return await _unit.DoCalulate(input.target.Value);
-        }
+
+        using var _ = _scope.WithScope(input);
+        await using var transaction = await Transaction<CalculationContext>.Begin(
+            createContext: _ => Task.FromResult(new CalculationContext(input.target.Value)),
+            commitChanges: (_, _) => Task.CompletedTask,
+            rollbackChanges: (_, _) => Task.CompletedTask,
+            ct: ct);
+        var result = await _unit.DoCalulate(transaction.Context.Target);
+        await transaction.Commit(ct);
+        return result;
     }
 }
