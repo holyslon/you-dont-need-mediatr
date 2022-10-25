@@ -1,4 +1,5 @@
-﻿using Example.App.MediatR.Calculation;
+﻿using Example.App.Logging;
+using Example.App.MediatR.Calculation;
 using Example.App.Native;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace Example.Web.Controllers;
 public class NativeController : ControllerBase
 {
     private readonly CalculationUnit _unit;
+    private readonly IScope _scope;
 
     public NativeController(CalculationUnit unit)
     {
@@ -26,6 +28,7 @@ public class NativeController : ControllerBase
         }
         else
         {
+            using var _ = _scope.WithScope(input);
             return await _unit.DoCalulate(input.target.Value);
         }
     }
