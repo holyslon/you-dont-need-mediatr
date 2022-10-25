@@ -15,18 +15,18 @@ public class MediatRController : ControllerBase
         _mediator = mediator;
     }
     
-    public record CalculateInput(int? Target){}
+    public record CalculateInput(int? target){}
 
     [HttpPost("calculate")]
     public async Task<CalculationResponse> Calculate([FromBody] CalculateInput input)
     {
-        if (!input.Target.HasValue)
+        if (!input.target.HasValue)
         {
-            throw new BadHttpRequestException($"{nameof(input.Target)} should be present", 400);
+            throw new BadHttpRequestException($"{nameof(input.target)} should be present", 400);
         }
         else
         {
-            return await _mediator.Send(new CalculationRequest(input.Target.Value));
+            return await _mediator.Send(new CalculationRequest(input.target.Value));
         }
     }
 }
