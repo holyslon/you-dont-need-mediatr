@@ -1,5 +1,6 @@
 ﻿using Example.App.Logging;
 using Example.App.MediatR.Calculation;
+using Example.App.Metrics;
 using Example.App.Native;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ public class NativeController : ControllerBase
 {
     private readonly CalculationUnit _unit;
     private readonly IScope _scope;
+    private readonly IElapsed _elapsed;
 
     public NativeController(CalculationUnit unit)
     {
@@ -26,9 +28,10 @@ public class NativeController : ControllerBase
         {
             throw new BadHttpRequestException($"{nameof(MediatRController.CalculateInput.target)} should be present", 400);
         }
-        else
+
+        using(_scope.WithScope(input))
+        using(_elapsed.WithMeter<MediatRController.CalculateInput>())
         {
-            using var _ = _scope.WithScope(input);
             return await _unit.DoCalulate(input.target.Value);
         }
     }
