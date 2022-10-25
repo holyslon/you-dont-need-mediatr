@@ -2,8 +2,6 @@
 
 namespace Example.App.Native;
 
-public record CalculateRequest(int Target);
-
 public class CalculationUnit
 {
     private readonly FactorialService _factorialService;
@@ -15,8 +13,8 @@ public class CalculationUnit
         _fibonacciService = fibonacciService;
     }
     
-    public Task<(int Fibonachi, int Factorial)> DoCalculate(CalculateRequest request)
+    public Task<(int Fibonachi, int Factorial)> DoCalculate(int target)
     {
-        return Task.FromResult((_factorialService.GetFactorial(request.Target), _fibonacciService.GetNumber(request.Target)));
+        return Task.FromResult((_factorialService.GetFactorial(target), _fibonacciService.GetNumber(target)));
     }
 }

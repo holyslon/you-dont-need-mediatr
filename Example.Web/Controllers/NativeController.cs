@@ -20,11 +20,7 @@ public class NativeController : ControllerBase
     [HttpPost("calculate")]
     public async Task<(int, int)> Calculate([FromBody] CalculateInput input)
     {
-        var request = ValidateNullable.GetOrThrow(
-            ctx => new CalculateRequest(
-                Target: ctx.Get(input.target)
-            )
-        );
-        return await _unit.DoCalculate(request);
+        var target = ValidateNullable.GetOrThrow(ctx => ctx.Get(input.target));
+        return await _unit.DoCalculate(target);
     }
 }
