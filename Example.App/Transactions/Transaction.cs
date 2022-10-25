@@ -1,19 +1,12 @@
 namespace Example.App.Transactions;
 
-public interface IContext
-{
-}
+public delegate Task<TContext> CreateContext<TContext>(CancellationToken ct);
 
-public delegate Task<TContext> CreateContext<TContext>(CancellationToken ct)
-    where TContext : IContext;
+public delegate Task CommitChanges<in TContext>(TContext context, CancellationToken ct);
 
-public delegate Task CommitChanges<in TContext>(TContext context, CancellationToken ct)
-    where TContext : IContext;
+public delegate Task RollbackChanges<in TContext>(TContext context, CancellationToken ct);
 
-public delegate Task RollbackChanges<in TContext>(TContext context, CancellationToken ct)
-    where TContext : IContext;
-
-public class Transaction<TContext> : IAsyncDisposable where TContext : IContext
+public class Transaction<TContext> : IAsyncDisposable where TContext : notnull
 {
     private readonly CommitChanges<TContext> _commitChanges;
     private readonly RollbackChanges<TContext> _rollbackChanges;
@@ -38,7 +31,6 @@ public class Transaction<TContext> : IAsyncDisposable where TContext : IContext
         CancellationToken ct)
     {
         var transaction = new Transaction<TContext>(commitChanges, rollbackChanges);
-
         try
         {
             transaction.Context = await createContext(ct);
@@ -53,7 +45,7 @@ public class Transaction<TContext> : IAsyncDisposable where TContext : IContext
 
     public async Task Commit(CancellationToken ct)
     {
-        if (Context is null)
+        if (Context != null)
         {
             await _commitChanges(Context, ct);
             _isCommitted = true;
