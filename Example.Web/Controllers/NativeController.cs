@@ -1,4 +1,4 @@
-﻿using Example.App.Native;
+using Example.App.Native;
 using Example.Web.Validation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +9,7 @@ namespace Example.Web.Controllers;
 public class NativeController : ControllerBase
 {
     private readonly CalculationUnit _unit;
+    private readonly IScope _scope;
 
     public NativeController(CalculationUnit unit)
     {
