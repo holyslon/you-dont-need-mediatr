@@ -65,7 +65,7 @@ public class MediatrVsNative
 
     [Benchmark]
     public Task<(int, int)> NativeTransient() =>
-        _nativeServiceProviderTransient.GetService<CalculationUnit>().DoCalulate(7);
+        _nativeServiceProviderTransient.GetService<CalculationUnit>().DoCalculate(7);
 
     [Benchmark]
     public Task<CalculationResponse> MediatrTransient() =>
@@ -77,7 +77,7 @@ public class MediatrVsNative
 
     [Benchmark]
     public Task<(int, int)> NativeSingleton() =>
-        _nativeServiceProviderSingleton.GetService<CalculationUnit>().DoCalulate(7);
+        _nativeServiceProviderSingleton.GetService<CalculationUnit>().DoCalculate(7);
 
     [Benchmark]
     public Task<CalculationResponse> MediatrSingleton() =>

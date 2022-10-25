@@ -1,3 +1,4 @@
+using Example.App.Logging;
 using Example.App.Native;
 using Example.Web.Validation;
 using Microsoft.AspNetCore.Mvc;
