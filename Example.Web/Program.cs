@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using Example.App;
 using Example.App.Logging;
 using Example.App.MediatR.Behaviors.Logging;
+using Example.App.Metrics;
 using Example.App.Native;
 using Example.App.Services.Calculation;
 using Example.Web.Controllers;
@@ -27,6 +28,7 @@ builder.Services.AddHttpLogging(opts =>
                          HttpLoggingFields.RequestBody | 
                          HttpLoggingFields.ResponseBody);
 
+builder.Services.AddElapsedMetric();
 builder.Services.AddLoggingScopes();
 builder.Services.Configure<ScopeGeneratorOptions<NativeController.CalculateInput>>(opts =>
     opts.WithGenerator(input => ImmutableDictionary.CreateRange(new[]
