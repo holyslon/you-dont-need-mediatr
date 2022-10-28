@@ -15,9 +15,10 @@ public class NativeController : ControllerBase
     private readonly CalculationUnit _unit;
     private readonly IScope _scope;
 
-    public NativeController(CalculationUnit unit)
+    public NativeController(CalculationUnit unit, IScope scope)
     {
         _unit = unit;
+        _scope = scope;
     }
 
     public record CalculateInput(int? target);

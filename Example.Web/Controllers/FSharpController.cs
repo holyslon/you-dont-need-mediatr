@@ -29,21 +29,20 @@ public class FSharpController : ControllerBase
             throw new BadHttpRequestException($"{nameof(MediatRController.CalculateInput.target)} should be present",
                 400);
         }
-        else
+
+        return Calculator.Handle(input.target.Value) switch
         {
-            return Calculator.Handle(input.target.Value) switch
+            {IsOk: true} result => result.ResultValue.ToValueTuple(),
+            var result => result.ErrorValue switch
             {
-                {IsOk: true} result => result.ResultValue.ToValueTuple(),
-                var result => result.ErrorValue switch
-                {
-                    Calculator.NumberValidationError.NotPositiveNumberError error => throw new BadHttpRequestException(
-                        $"Validation error: {error.Item}",
-                        400),
-                    Calculator.NumberValidationError.ToBigNumberError error => throw new BadHttpRequestException(
-                        $"Validation error: {error.Item}",
-                        400),
-                }
-            };
-        }
+                Calculator.NumberValidationError.NotPositiveNumberError error => throw new BadHttpRequestException(
+                    $"Validation error: {error.Item}",
+                    400),
+                Calculator.NumberValidationError.ToBigNumberError error => throw new BadHttpRequestException(
+                    $"Validation error: {error.Item}",
+                    400),
+                _ => throw new ArgumentOutOfRangeException(nameof(result.ErrorValue), result.ErrorValue, null)
+            }
+        };
     }
 }
