@@ -2,6 +2,8 @@ using System.Collections.Immutable;
 using Example.App;
 using Example.App.Logging;
 using Example.App.MediatR.Behaviors.Logging;
+using Example.App.MediatR.Behaviors.Metrics;
+using Example.App.Metrics;
 using Example.App.Native;
 using Example.App.Services.Calculation;
 using Example.Web.Controllers;
@@ -15,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(MetricsBehavior<,>));
 builder.Services.AddSingleton<FactorialService>();
 builder.Services.AddSingleton<FibonacciService>();
 builder.Services.AddSingleton<CalculationUnit>();

@@ -1,5 +1,8 @@
-﻿using Example.App.Native;
+﻿using System.Diagnostics;
+using Example.App.F;
+using Example.App.Native;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FSharp.Core;
 
 namespace Example.Web.Controllers;
 
@@ -13,19 +16,34 @@ public class FSharpController : ControllerBase
     {
         _unit = unit;
     }
-    
-    public record CalculateInput(int? target){}
+
+    public record CalculateInput(int? target)
+    {
+    }
 
     [HttpPost("calculate")]
-    public async Task<(int,int)> Calculate([FromBody] CalculateInput input)
+    public async Task<(int, int)> Calculate([FromBody] CalculateInput input)
     {
         if (!input.target.HasValue)
         {
-            throw new BadHttpRequestException($"{nameof(MediatRController.CalculateInput.target)} should be present", 400);
+            throw new BadHttpRequestException($"{nameof(MediatRController.CalculateInput.target)} should be present",
+                400);
         }
         else
         {
-            return App.F.Calculator.Calculate(input.target.Value).Value.ToValueTuple();
+            return Calculator.Handle(input.target.Value) switch
+            {
+                {IsOk: true} result => result.ResultValue.ToValueTuple(),
+                var result => result.ErrorValue switch
+                {
+                    Calculator.NumberValidationError.NotPositiveNumberError error => throw new BadHttpRequestException(
+                        $"Validation error: {error.Item}",
+                        400),
+                    Calculator.NumberValidationError.ToBigNumberError error => throw new BadHttpRequestException(
+                        $"Validation error: {error.Item}",
+                        400),
+                }
+            };
         }
     }
 }
