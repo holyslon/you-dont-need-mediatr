@@ -1,7 +1,0 @@
-﻿#Sunny day mediatr calculate
-POST http://localhost:5263/mediatr/calculate
-Content-Type: application/json
-
-{
-  "target": 7
-}

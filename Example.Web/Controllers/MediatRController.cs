@@ -1,6 +1,9 @@
-﻿using Example.App.MediatR.Calculation;
+﻿using System.ComponentModel.DataAnnotations;
+using Example.App.MediatR.Calculation;
+using Example.App.Validation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using ValidationException = Example.App.Validation.ValidationException;
 
 namespace Example.Web.Controllers;
 
@@ -22,7 +25,7 @@ public class MediatRController : ControllerBase
     {
         if (!input.target.HasValue)
         {
-            throw new BadHttpRequestException($"{nameof(input.target)} should be present", 400);
+            throw new ValidationException(nameof(input.target), "target should present");
         }
         else
         {

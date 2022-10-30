@@ -1,0 +1,25 @@
+﻿#Sunny day calculate
+POST http://localhost:5263/native/calculate
+Content-Type: application/json
+
+{
+  "target": 7
+}
+
+###
+#Empty calculate
+POST http://localhost:5263/native/calculate
+Content-Type: application/json
+
+{
+}
+
+
+###
+#too big calculate
+POST http://localhost:5263/native/calculate
+Content-Type: application/json
+
+{
+  "target": 21
+}
